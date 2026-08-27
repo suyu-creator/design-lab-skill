@@ -1,0 +1,280 @@
+<div align="center">
+
+# 🧪 Design-Lab
+
+**The unified analysis & design skill — one command from requirement to closed-loop delivery.**
+
+**三合一统一分析/设计 skill —— 需求 → 设计 → 复用 → 验证 → 闭环，单命令走完**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-4A5568.svg)
+![Design](https://img.shields.io/badge/Design-Lab-7C3AED.svg)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+
+</div>
+
+---
+
+## English · 英文版
+
+### Pain Points
+
+Three separate skills each cover one slice, but they don't connect:
+
+- 🔍 **deep-analysis only "finds projects to reuse" but never knows which problem the reused code actually solves** — its researcher writes shallow reasons like "core logic matches the requirement"; hot repos get reused on a whim, with no sense of what to cut or how to adapt
+- 🏗️ **arch-designer / agent-designer have the knowledge but no closed loop** — they own the problem→solution map, pitfalls library, and checklists, but only judge designs; they never go to GitHub to find existing implementations
+- 📦 **Three separate installs, three separate maintenance tracks** — install arch for architecture, agent for agents, deep for research; easy to reach for the wrong skill at the wrong time
+
+**Design-Lab merges all three: deep-analysis's research loop as the trunk, arch/agent-designer's problem-mapping + pitfalls injected into the reuse-evaluation step, upgrading reuse from "this repo looks good" to "it solves problem Y with approach X, we also have Y, so keep module Z, cut A/B, patch in countermeasure C".**
+
+### With vs Without
+
+| | Without (three skills in silos) | With Design-Lab |
+|---|---|---|
+| Flow | Research / architecture / agent each run their own path | One `/design-lab <requirement>` walks the whole closed loop |
+| Reuse eval | "Core logic matches requirement" | ★**4 problem-fit questions**: what problem does it solve / do we really have it / is the fix appropriate / how to reuse + **trim list** (keep/cut/adapt) |
+| Design order | Research first, integrate later; finding code has no basis | **Design first, find code later**: produce "our problem list", then search GitHub against it |
+| Knowledge loading | Pick a skill by gut feeling | **Conditional trigger**: no agent knowledge loaded for non-agent requirements |
+| Finding gaps | One-pass by intuition | Pre-simulation (aided by pitfalls library) + post-simulation (coverage check) + optional adversarial review |
+| Confirmation | Run the whole pipeline, then come back | **Every Step has a mandatory confirmation gate** — no advancing until answered |
+
+### Core Capabilities
+
+- **One-command closed loop**: clarification → domain design → GitHub reuse evaluation → pre-simulation → optional adversarial → closure draft → post-simulation → write CLOSURE.md
+- **★Design first, find code later**: Step 2 uses arch/agent knowledge to design "our problem list"; Step 3 searches GitHub with that list in hand — this is what makes problem-fit judgment possible
+- **★4 problem-fit questions + trim list**: read actual code (not just the README) to judge what problem the candidate solves, whether we really have it, whether the fix matches the pitfalls library, and how to reuse; every cut must state "it solves a problem we don't have"
+- **Conditional agent knowledge**: agent-flow loads only when the requirement involves agents (agent/AI assistant/tool use/multi-agent/RAG), otherwise skipped
+- **9 architecture patterns + 20+ agent design patterns**: each covers "what problem / what it looks like / cost / when NOT to use"
+- **Merged pitfalls library — 55 entries**: 17 architecture + 38 agent + real incident files, each = pit → consequence → countermeasure
+- **5-group review checklist + delivery gates**: consistency / resilience / scale / security / AI-specific; no CRITICAL → no delivery
+- **31 real-system template map + dual simulation + optional adversarial**: templates as design starting points; pre-simulation finds gaps, post-simulation verifies coverage, adversarial attacks the direction
+- **Per-domain experience vault**: separate `arch` / `agent` / `general` libraries — it gets to know you better over time
+
+### How It Works
+
+One command, with a **mandatory confirmation gate at every Step**:
+
+```
+/design-lab <requirement>
+  ├─ Step 1  Clarification (adaptive) + path choice ── user confirms
+  │          Few/no questions if clear; 1-2 key ones if vague
+  ├─ Step 2  Domain design (design first) ★produces "our problem list"
+  │          ├─ Architecture/system → arch-flow (estimation/patterns/structure/resilience)
+  │          └─ With agents       → also agent-flow (BDD/patterns/structure/guardrails)
+  │          ── ⚠️ gate: "Draft + problem list OK?"
+  ├─ Step 3  researcher: GitHub reuse + 4 problem-fit questions + trim list
+  │          ── ⚠️ gate: "Reuse eval + trims OK?"
+  ├─ Step 4  Pre-simulation for gaps (reads shared pitfalls library)
+  ├─ Step 5  Feasibility integration + optional adversarial ⚠️ gate: direction OK? run red-team?
+  ├─ Step 6  Closure draft ── ⚠️ gate: "Plan OK?"
+  └─ Step 7  Post-simulation → write CLOSURE.md after confirmation
+```
+
+**Key design**: design first (know your own problems) → find code (is this repo solving our problem?) → pre-simulate (find gaps) → adversarial (attack the direction, optional) → post-simulate (verify coverage). Requirements may change at any moment — pause and roll back to the matching Step.
+
+### Install
+
+```bash
+# Clone
+git clone https://github.com/suyu-creator/design-lab-skills.git
+
+# Copy to Claude Code skills dir
+cp -r design-lab-skills/skills/design-lab ~/.claude/skills/
+```
+
+Or manually drop the `skills/design-lab/` folder into `~/.claude/skills/` and restart Claude Code.
+
+**Trigger**: just say "I want to build an XX system/platform", "design an AI customer-service agent", "research and design this", or explicitly `/design-lab <requirement>`. Simple requirements (single page / single API / copy change) are not triggered — you get a one-line plan instead.
+
+### Hard Rules
+
+1. ⚠️ **Only complex requirements trigger** — simple ones get a one-line plan
+2. ⚠️ **Reuse first** — "research" path searches GitHub first; "direct plan" path relies on experience (labeled "LLM guess")
+3. ⚠️ **Every reuse candidate passes the 4 problem-fit questions + trim list**; gaps without reuse must get a solution, never just listed
+4. ⚠️ **No agent knowledge loaded for non-agent requirements** (conditional trigger)
+5. ⚠️ **Every claim is sourced** — GitHub code (repo@file:line) or "LLM guess"
+6. ⚠️ **Requirement change = pause** — record → assess impact → roll back to matching Step → continue after user confirms
+7. ⚠️ **Ask, then stop** — always wait for the answer before advancing
+
+### Module Index
+
+| Need | Look here |
+|------|-----------|
+| Entry point + Step 1-7 orchestration + hard rules | `SKILL.md` |
+| Step 2 architecture design | `flows/arch-flow.md` |
+| Step 2 agent design (conditional) | `flows/agent-flow.md` |
+| Step 3 research + ★problem-fit + trim list | `stages/researcher.md` |
+| Step 4 pre-simulation | `stages/simulator.md` |
+| Step 5 integration + optional adversarial | `stages/redteam.md` |
+| Step 6-7 closure + post-simulation | `stages/closure.md` |
+| 9 architecture patterns + selection mnemonic | `references/01-patterns.md` |
+| 20+ agent design patterns | `references/02-agent-patterns.md` |
+| ★Merged problem→solution map | `references/03-problem-solution-map.md` |
+| Merged pitfalls library (55 + incidents) | `references/04-pitfalls.md` |
+| Merged checklists + review + delivery gates | `references/05-checklists.md` |
+| 31 real-system template map | `references/06-templates-map.md` |
+| Agent templates (prompt/schema/test) | `references/07-agent-templates.md` |
+| Architecture methods (8-step/envelope/ADR) | `references/08-design-method.md` |
+| Agent production delivery (eval/guardrails/monitoring) | `references/09-delivery.md` |
+
+### Provenance
+
+- **[Merged]** From three published skills: **deep-analysis** (research-loop trunk) + **arch-designer** (architecture knowledge: 9 patterns / 11 pitfalls / incidents / 31 templates) + **agent-designer** (agent knowledge: 20+ patterns / 38 pitfalls / delivery) — the original repos remain independent
+- **[Literature]** awesome-architecture, Anthropic《Agentic Design Patterns》, official post-mortems
+- **[Practice]** per-domain experience vaults (`experience/arch.md` / `agent.md` / `general.md`, U01+)
+
+### FAQ
+
+**Q: Relationship to the original three skills?**
+A: This replaces them. Installing design-lab means you no longer need deep-analysis / arch-designer / agent-designer. The three original repos stay independent.
+
+**Q: When does it trigger?**
+A: Complex requirements only (multi-module / architecture decisions / agents / research needed / scale-concurrency-security risks / vague scope). Simple ones get a one-line plan.
+
+**Q: Does it write business code?**
+A: No. It outputs plans / designs / research reports / a closure document (CLOSURE.md) with a reuse work order and a build-from-scratch work order. Implementation belongs to the development phase.
+
+**Q: Why "design first, find code later"?**
+A: Only after knowing your own problems (Step 2 problem list) can you judge whether a candidate repo solves your problem — a hot repo ≠ the right repo. Hit the problem → keep; miss it → cut.
+
+**Q: How do I add hands-on experience?**
+A: Say "加入经验库" (add to experience vault) after a project; it walks through 5 questions (scenario/pit/consequence/countermeasure/source) and writes to the matching domain vault. Auto-read at the start of every design.
+
+**Q: Will git pull overwrite my experience?**
+A: The vault lives inside the skill dir — commit or stash `experience/` changes before `git pull`. On conflict, keep both sides and de-duplicate numbers.
+
+---
+
+## 中文版 · Chinese
+
+### 痛点
+
+三个 skill 各管一段，配合有洞：
+
+- 🔍 **deep-analysis 只会"找项目复用"，不知道复用的是哪个问题的解法** —— researcher 写理由只会写"核心逻辑匹配需求"，热门 repo 就拿过来，砍不砍、怎么改全靠感觉
+- 🏗️ **arch-designer / agent-designer 有知识没闭环** —— 有 问题→方案映射、踩坑库、检查清单，但只做判断，没有"去 GitHub 找现成实现"的调研闭环
+- 📦 **三套独立安装、独立维护** —— 架构需求装 arch、agent 需求装 agent、调研需求装 deep，还容易在错误的时刻用错 skill
+
+**Design-Lab 把三合一：以 deep-analysis 的调研闭环为主干，把 arch/agent-designer 的问题映射 + 踩坑库注入"复用评估"，让复用从"这项目不错"升级为"它用 X 解决了 Y 问题，我们也有 Y，所以保留 Z 模块、砍掉 A/B、补上 C 对策"。**
+
+### 装了 vs 没装
+
+| | 没装（三个 skill 分开用） | 装了 Design-Lab |
+|---|---|---|
+| 流程 | 调研/架构/智能体三套各走各的 | 单命令 `/design-lab <需求>` 走完整闭环 |
+| 复用评估 | 只写"核心逻辑匹配需求" | ★**问题拟合四问**：它解决什么问题/我们真有吗/解法对症吗/怎么复用 + **裁剪清单**（保留/砍/改） |
+| 设计顺序 | 先调研后整合，找码没依据 | **先设计后找码**：先产出「我们的问题清单」，再带问题找复用 |
+| 知识加载 | 凭感觉选 skill | **条件触发**：无智能体的需求不加载 agent 知识 |
+| 找遗漏 | 靠经验扫一遍 | 前模拟（踩坑库辅助）+ 后模拟（覆盖验证）+ 可选对抗（攻方向） |
+| 确认 | 一口气跑完才回头 | **每个 Step 都有强制收尾确认点**，答完才进下一步 |
+
+### 核心能力
+
+- **三合一一键闭环**：需求澄清 → 领域设计 → GitHub 复用评估 → 前模拟 → 可选对抗 → 闭环草案 → 后模拟 → 写 CLOSURE.md
+- **★先设计后找码**：Step 2 用 arch/agent 知识先设计出「我们的问题清单」，Step 3 才带着问题去 GitHub——问题拟合才有依据
+- **★问题拟合四问 + 裁剪清单**：从代码实读（不只看 README）判断候选 repo 解决什么问题、我们需求里真有没有、解法是否对症踩坑库、怎么复用；每处裁剪都要说"因为它解决的是我们没有的问题"
+- **条件触发 agent 知识**：需求含智能体（agent/AI 助手/工具调用/多智能体/RAG）才加载 agent-flow，否则不加载，避免无关内容
+- **9 大架构模式 + 20+ 智能体设计模式**：每个含"解决什么问题/长什么样/代价/什么时候别用"
+- **合并踩坑库 55 条**：架构 17 条 + 智能体 38 条 + 真实事故档案，每条 = 坑 → 后果 → 对策
+- **5 组审查清单 + 交付门禁**：一致性/韧性/规模/安全/AI 特有，无 CRITICAL 才能交付
+- **31 个真实系统模板地图 + 双模拟 + 可选对抗**：模板当设计起点；前模拟找遗漏、后模拟验覆盖、对抗攻方向
+- **分领域经验库**：arch / agent / general 三库独立沉淀，越用越懂你
+
+### 工作原理
+
+单命令走完，**每个 Step 都有强制收尾确认点**（答完才进下一步）：
+
+```
+/design-lab <需求>
+  ├─ Step 1  需求澄清(自适应) + 路径选择 ── 用户确认
+  │          需求清楚少问甚至不问；模糊才问 1-2 个关键问题
+  ├─ Step 2  领域设计(先设计后找码) ★产出「我们的问题清单」
+  │          ├─ 架构/系统类 → arch-flow（场景估算/模式选型/结构/韧性）
+  │          └─ 含智能体    → 追加 agent-flow（BDD/模式/结构/护栏测试）
+  │          ── ⚠️ 强制收尾：「设计草案+问题清单 OK 吗？」
+  ├─ Step 3  researcher GitHub 找复用 + 问题拟合四问 + 裁剪清单
+  │          ── ⚠️ 强制收尾：「复用评估+裁剪 OK 吗？」
+  ├─ Step 4  前模拟找遗漏(预读共享踩坑库)
+  ├─ Step 5  可行性整合 + 可选对抗(用户选) ── ⚠️ 强制收尾：方向对吗？跑不跑对抗？
+  ├─ Step 6  闭环草案 ── ⚠️ 强制收尾：「方案 OK 吗？」
+  └─ Step 7  后模拟验证 → 确认后写 CLOSURE.md
+```
+
+**关键设计**：先设计（知道自己有哪些问题）→ 再找码（判断候选解决的是不是自己的问题）→ 前模拟（找遗漏）→ 对抗（攻方向，可选）→ 后模拟（验覆盖）。需求变更随时暂停、回退对应 Step。
+
+### 安装
+
+```bash
+# 克隆到本地
+git clone https://github.com/suyu-creator/design-lab-skills.git
+
+# 复制到 Claude Code skills 目录
+cp -r design-lab-skills/skills/design-lab ~/.claude/skills/
+```
+
+或者手动把 `skills/design-lab/` 整个文件夹放进 `~/.claude/skills/`，重启 Claude Code 即生效。
+
+**触发**：直接说「我要做 XX 系统/平台」「帮我设计一个 AI 客服」「这个方案帮我调研+设计」，或显式 `/design-lab <需求>`。简单需求（单页面/单接口/改文案）不触发，直接给 1 句方案。
+
+### 硬规则
+
+1. ⚠️ **复杂需求才触发** —— 简单需求直接给 1 句方案
+2. ⚠️ **复用优先** —— 选「先调研」先搜 GitHub，有现成直接引用，不从零想；选「直接给」凭经验（标「LLM 推测」）
+3. ⚠️ **复用候选必须过「问题拟合四问」+ 出裁剪清单**；无复用的坑必须写解决方案
+4. ⚠️ **无智能体的需求不加载 agent 知识**（条件触发）
+5. ⚠️ **每条声明标注来源** —— GitHub 代码(repo@文件:行号) 或 「LLM 推测」
+6. ⚠️ **需求变更即停** —— 暂停 → 记录 → 评估影响 → 回退对应 Step → 用户确认后继续
+7. ⚠️ **问完必停** —— 每次提问后停下等回答，得到答复前绝不推进下一步
+
+### 模块导航
+
+| 需要什么 | 查哪里 |
+|---------|--------|
+| 调度入口 + Step 1-7 编排 + 硬规则 | `SKILL.md` |
+| Step 2 架构设计（估算/选型/结构/韧性） | `flows/arch-flow.md` |
+| Step 2 智能体设计（条件触发） | `flows/agent-flow.md` |
+| Step 3 调研 + ★问题拟合四问 + 裁剪清单 | `stages/researcher.md` |
+| Step 4 前模拟（遗漏扫描） | `stages/simulator.md` |
+| Step 5 整合 + 可选对抗 | `stages/redteam.md` |
+| Step 6-7 闭环草案 + 后模拟 + 写文件 | `stages/closure.md` |
+| 9 大架构模式 + 选型口诀 | `references/01-patterns.md` |
+| 20+ 智能体设计模式 | `references/02-agent-patterns.md` |
+| ★合并问题→方案映射（架构5组+智能体14类） | `references/03-problem-solution-map.md` |
+| 合并踩坑库（55 条 + 事故） | `references/04-pitfalls.md` |
+| 合并检查清单 + 评审标准 + 交付门禁 | `references/05-checklists.md` |
+| 31 真实系统模板地图 | `references/06-templates-map.md` |
+| agent 模板（prompt/schema/测试） | `references/07-agent-templates.md` |
+| 架构方法（八步/信封估算/ADR/演进） | `references/08-design-method.md` |
+| agent 生产交付（评估/护栏/监控） | `references/09-delivery.md` |
+
+### 经验来源
+
+- **[合并]** 由三个已发布 skill 合并而成：**deep-analysis**（调研闭环主干）+ **arch-designer**（架构知识：9 模式/11 坑/事故/31 模板）+ **agent-designer**（智能体知识：20+ 模式/38 坑/交付），原仓库各自保留独立
+- **[文献]** awesome-architecture、Anthropic《Agentic Design Patterns》、各官方事后分析等提炼
+- **[实战]** 分领域经验库（`experience/arch.md` / `agent.md` / `general.md`，编号 U01 起）
+
+### FAQ
+
+**Q: 和原来的三个 skill 什么关系？**
+A: 合并替代。装 design-lab 后不需要再装 deep-analysis / arch-designer / agent-designer。三个原仓库保留独立（各自有专门用途），后续可迁移。
+
+**Q: 什么时候触发？**
+A: 复杂需求才触发（多模块/需架构决策/涉及智能体/需调研/存在规模并发安全风险/范围模糊）。简单需求（单页面/单接口/改文案）直接给 1 句方案。
+
+**Q: 它会不会自己写业务代码？**
+A: 不写。它输出的是**方案/设计/调研报告/闭环文档**（CLOSURE.md），包含复用施工单和自研施工单，落地实现交给开发阶段。
+
+**Q: 为什么"先设计后找码"？**
+A: 只有先知道自己系统有哪些问题（Step 2 问题清单），才能在 Step 3 判断候选 repo 解决的是不是自己的问题——热门 repo ≠ 适合我们，命中问题才保留，没命中就砍。
+
+**Q: 怎么把实战经验加进去？**
+A: 做完项目说一句「加入经验库」，按 5 问引导（场景/坑/后果/对策/来源）写进对应领域经验库。下次设计开始自动读取参考。
+
+**Q: git 更新 skill 会不会覆盖我的经验？**
+A: 经验库在 skill 目录内，`git pull` 前先把 `experience/` 的改动 commit 或 stash 就不会丢。冲突时保留双方条目、编号去重即可。
+
+---
+
+## License
+
+[MIT](LICENSE) © suyu-creator
