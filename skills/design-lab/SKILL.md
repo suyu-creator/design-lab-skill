@@ -1,6 +1,6 @@
 ---
 name: design-lab
-description: 三合一统一分析/设计。单命令 /design-lab <需求> 走完 需求澄清→领域设计(架构/智能体)→GitHub 复用评估(问题拟合+裁剪)→前模拟→可选对抗→闭环报告。触发:复杂/多模块/需调研的功能/架构设计/智能体设计。简单需求(单页面/单接口/改文案)不触发。
+description: 复杂/多模块/需调研的功能、架构设计、智能体设计时触发：/design-lab <需求>。简单需求(单页面/单接口/改文案)不触发，直接给方案。
 argument-hint: <需求描述>
 ---
 
@@ -31,10 +31,9 @@ argument-hint: <需求描述>
   │          ├─ 架构/系统类 → Read flows/arch-flow.md (场景估算/模式选型/结构/韧性)
   │          └─ 含智能体    → 追加 Read flows/agent-flow.md (BDD/模式/结构/护栏测试)
   ├─ Step 3  Read stages/researcher.md → GitHub 找复用 + 问题拟合四问 + 裁剪清单
-  ├─ Step 4  Read stages/simulator.md  → 前模拟找遗漏(预读共享踩坑库)
-  ├─ Step 5  Read stages/redteam.md    → 可行性整合 + 可选对抗(用户选)
-  ├─ Step 6  Read stages/closure.md    → 闭环草案 ── 用户确认
-  └─ Step 7  后模拟验证 → 确认后写 CLOSURE.md
+  ├─ Step 4  Read stages/simulator.md + redteam.md → 前模拟找遗漏 → 可行性整合 + 可选对抗
+  ├─ Step 5  Read stages/closure.md    → 闭环草案 ── 用户确认
+  └─ Step 6  后模拟验证 → 确认后写 CLOSURE.md
         ⤴ 任意时刻冒出新需求 → 暂停，按硬规则 6 处理
 ```
 
@@ -70,26 +69,28 @@ argument-hint: <需求描述>
 
 > **"复用评估 + 裁剪清单 OK 吗？确认后我才进 Step 4 前模拟。"**
 
-## Step 4: 前模拟（找遗漏）
+## Step 4: 前模拟 + 整合 + 可选对抗
 
-**Read `stages/simulator.md`**。基于 phase0 + Step 2 设计 + Step 3 researcher 产物，扫三类遗漏（用户没提但可能需要的 / 用户想当然的假设 / 同类项目踩坑），预读共享踩坑库 `references/04-pitfalls.md`。
+⚠️ **顺序不可颠倒：先前模拟 → 再整合 → 最后问对抗**（对抗以遗漏清单为输入）。
 
-## Step 5: 整合 + 可选对抗
+**Read `stages/simulator.md`**（前模拟）。基于 phase0 + Step 2 设计 + Step 3 researcher 产物，扫三类遗漏（用户没提但可能需要的 / 用户想当然的假设 / 同类项目踩坑），预读共享踩坑库 `references/04-pitfalls.md`。
 
-⚠️ **前置硬约束：必须先完成 Step 3 复用评估 + Step 4 前模拟（拿到复用候选 Top3 + 遗漏清单），才允许问下面的对抗收尾问题。前模拟没做完，不许问「要不要跑对抗」——对抗以遗漏清单为输入，顺序不可颠倒。**
+⚠️ **前模拟收尾（必须问，答完才进整合）**：
 
-**Read `stages/redteam.md`**。先可行性整合（复用候选 Top3+裁剪 / 遗漏 Top5 / 裁决 proceed/改/转向/kill）。
+> **"遗漏清单每条都有解决方案了吗？没有的补上（复用优先，无复用写自研思路）。"**
 
-⚠️ **强制收尾问题（必须问，答完才进 Step 6）**：
+**Read `stages/redteam.md`**（整合 + 可选对抗）。先可行性整合（复用候选 Top3+裁剪 / 遗漏 Top5 / 裁决 proceed/改/转向/kill）。
+
+⚠️ **强制收尾问题（必须问，答完才进 Step 5）**：
 
 > **"方向对吗？可行性 OK 吗？要不要跑对抗 red-team？（跑 / 跳过）"**
 
-即使用户回答「直接下一步」/「确认」，**也必须追问对抗决策**（跑 / 跳过），得到明确回答后才进 Step 6。
+即使用户回答「直接下一步」/「确认」，**也必须追问对抗决策**（跑 / 跳过），得到明确回答后才进 Step 5。
 
-- 选「跑」→ 执行三步合一完整性对抗（Steelman 完整版 → Actor 穷举 4 问 → Premortem 失败倒推）。⚠️ 对抗结果必须获用户确认后才进 Step 6。
-- 选「跳过」→ 直接进 Step 6。
+- 选「跑」→ 执行三步合一完整性对抗（Steelman 完整版 → Actor 穷举 4 问 → Premortem 失败倒推）。⚠️ 对抗结果必须获用户确认后才进 Step 5。
+- 选「跳过」→ 直接进 Step 5。
 
-## Step 6: 闭环草案
+## Step 5: 闭环草案
 
 **Read `stages/closure.md`** 发草案（骨架 + 复用施工单 + 路线图 + 自研施工单）。
 
@@ -97,7 +98,7 @@ argument-hint: <需求描述>
 
 > **"方案 OK 吗？确认后我跑后模拟验证。"**
 
-## Step 7: 后模拟 + 写闭环
+## Step 6: 后模拟 + 写闭环
 
 用户确认草案后跑**后模拟**（模拟执行计划，走不通就修）。⚠️ 走查结果确认后才写 `CLOSURE.md`。
 
@@ -105,7 +106,7 @@ argument-hint: <需求描述>
 
 1. **复杂需求才触发** — 简单需求直接忽略
 2. **复用优先** — 选「查询」时先搜 GitHub，有现成直接引用，不从零想方案；选「直接给」时不搜索，凭经验直接给（标「LLM 推测」）
-3. ★**复用候选必须过「问题拟合四问」+ 出裁剪清单**；无复用的坑必须写解决方案，不能只列不留
+3. ★**每条问题/遗漏必须配解决方案** — 复用候选过「问题拟合四问」+ 出裁剪清单；**前模拟/对抗扫出的遗漏，无复用的写自研思路，实在给不出标「已知风险」**，不能只列不留
 4. ★**无智能体的需求不加载 agent 知识**（不触发 agent-flow，避免无关内容）
 5. **每条声明标注来源** — GitHub 代码(repo@文件:行号) 或 「LLM 推测」
 6. **需求变更即停** — 任意时刻冒出新需求（流程中/闭环报告后）：暂停 → 记录 → 评估影响 → 回退对应 Step（动范围→Step1、动设计→Step2、仅追加→闭环报告需求池）→ 用户确认后继续。绝不默默按旧需求做到底
@@ -115,12 +116,12 @@ argument-hint: <需求描述>
 
 ```
 ~/.claude/skills/design-lab/
-├── SKILL.md              # 本文件: 调度入口 + Step 1-7 编排 + 硬规则
+├── SKILL.md              # 本文件: 调度入口 + Step 1-6 编排 + 硬规则
 ├── stages/
 │   ├── researcher.md      # Step 3: GitHub 调研 + ★问题拟合四问 + 裁剪清单
 │   ├── simulator.md       # Step 4: phase0 + 前模拟遗漏扫描（预读踩坑库）
-│   ├── redteam.md         # Step 5: 可行性整合 + 可选对抗
-│   └── closure.md         # Step 6-7: 闭环草案 + 后模拟 + 写文件
+│   ├── redteam.md         # Step 4: 可行性整合 + 可选对抗
+│   └── closure.md         # Step 5-6: 闭环草案 + 后模拟 + 写文件
 ├── flows/
 │   ├── arch-flow.md       # Step 2 架构设计（场景估算/模式选型/结构/韧性）
 │   └── agent-flow.md      # Step 2 智能体设计（条件触发，无智能体不加载）
