@@ -35,42 +35,41 @@ Three separate skills each cover one slice, but they don't connect:
 | Reuse eval | "Core logic matches requirement" | ★**4 problem-fit questions**: what problem does it solve / do we really have it / is the fix appropriate / how to reuse + **trim list** (keep/cut/adapt) |
 | Design order | Research first, integrate later; finding code has no basis | **Design first, find code later**: produce "our problem list", then search GitHub against it |
 | Knowledge loading | Pick a skill by gut feeling | **Conditional trigger**: no agent knowledge loaded for non-agent requirements |
-| Finding gaps | One-pass by intuition | Pre-simulation (aided by pitfalls library) + post-simulation (coverage check) + optional adversarial review |
-| Confirmation | Run the whole pipeline, then come back | **Every Step has a mandatory confirmation gate** — no advancing until answered |
+| Finding gaps | One-pass by intuition | Pre-simulation (pitfalls library + completeness enumeration) + post-simulation (coverage check) |
+| Confirmation | Run the whole pipeline, then come back | **Only 4 confirmation gates** — everything else runs without interruption |
 
 ### Core Capabilities
 
-- **One-command closed loop**: clarification → domain design → GitHub reuse evaluation → pre-simulation → optional adversarial → closure draft → post-simulation → write CLOSURE.md
+- **One-command closed loop**: clarification → domain design → GitHub reuse evaluation → pre-simulation → feasibility integration → closure report (draft + post-sim walkthrough) → CLOSURE.md
 - **★Design first, find code later**: Step 2 uses arch/agent knowledge to design "our problem list"; Step 3 searches GitHub with that list in hand — this is what makes problem-fit judgment possible
 - **★4 problem-fit questions + trim list**: read actual code (not just the README) to judge what problem the candidate solves, whether we really have it, whether the fix matches the pitfalls library, and how to reuse; every cut must state "it solves a problem we don't have"
 - **Conditional agent knowledge**: agent-flow loads only when the requirement involves agents (agent/AI assistant/tool use/multi-agent/RAG), otherwise skipped
 - **9 architecture patterns + 20+ agent design patterns**: each covers "what problem / what it looks like / cost / when NOT to use"
 - **Merged pitfalls library — 55 entries**: 17 architecture + 38 agent + real incident files, each = pit → consequence → countermeasure
 - **5-group review checklist + delivery gates**: consistency / resilience / scale / security / AI-specific; no CRITICAL → no delivery
-- **31 real-system template map + dual simulation + optional adversarial**: templates as design starting points; pre-simulation finds gaps, post-simulation verifies coverage, adversarial attacks the direction
+- **31 real-system template map + dual simulation**: templates as design starting points; pre-simulation finds gaps (pitfalls library + Actor enumeration + Premortem completeness check), post-simulation verifies coverage
 - **Per-domain experience vault**: separate `arch` / `agent` / `general` libraries — it gets to know you better over time
 
 ### How It Works
 
-One command, with a **mandatory confirmation gate at every Step**:
+One command, with only **4 confirmation gates** — everything else runs without interruption:
 
 ```
 /design-lab <requirement>
-  ├─ Step 1  Clarification (adaptive) + path choice ── user confirms
+  ├─ Step 1  Clarification (adaptive) + path choice ── user answers ①
   │          Few/no questions if clear; 1-2 key ones if vague
   ├─ Step 2  Domain design (design first) ★produces "our problem list"
   │          ├─ Architecture/system → arch-flow (estimation/patterns/structure/resilience)
   │          └─ With agents       → also agent-flow (BDD/patterns/structure/guardrails)
-  │          ── ⚠️ gate: "Draft + problem list OK?"
-  ├─ Step 3  researcher: GitHub reuse + 4 problem-fit questions + trim list
-  │          ── ⚠️ gate: "Reuse eval + trims OK?"
-  ├─ Step 4  Pre-simulation for gaps (reads shared pitfalls library)
-  ├─ Step 5  Feasibility integration + optional adversarial ⚠️ gate: direction OK? run red-team?
-  ├─ Step 6  Closure draft ── ⚠️ gate: "Plan OK?"
-  └─ Step 7  Post-simulation → write CLOSURE.md after confirmation
+  │          ── ⚠️ gate ②: "Draft + problem list OK?"
+  ├─ Step 3  researcher → pre-simulation → integration (continuous, no stops)
+  │          ├─ researcher: GitHub reuse + 4 problem-fit questions + trim list
+  │          ├─ Pre-simulation: gap scan + completeness enumeration (reads shared pitfalls library)
+  │          └─ Integration: reuse Top3 + gaps Top5 + verdict ── ⚠️ gate ③
+  └─ Step 4  Draft → post-sim walkthrough → shown together ── gate ④ → write CLOSURE.md
 ```
 
-**Key design**: design first (know your own problems) → find code (is this repo solving our problem?) → pre-simulate (find gaps) → adversarial (attack the direction, optional) → post-simulate (verify coverage). Requirements may change at any moment — pause and roll back to the matching Step.
+**Key design**: design first (know your own problems) → find code (is this repo solving our problem?) → pre-simulate (find gaps + completeness enumeration) → post-simulate (verify coverage). Requirements may change at any moment — pause and roll back to the matching Step.
 
 ### Install
 
@@ -100,13 +99,12 @@ Or manually drop the `skills/design-lab/` folder into `~/.claude/skills/` and re
 
 | Need | Look here |
 |------|-----------|
-| Entry point + Step 1-7 orchestration + hard rules | `SKILL.md` |
+| Entry point + Step 1-4 orchestration + hard rules | `SKILL.md` |
 | Step 2 architecture design | `flows/arch-flow.md` |
 | Step 2 agent design (conditional) | `flows/agent-flow.md` |
 | Step 3 research + ★problem-fit + trim list | `stages/researcher.md` |
-| Step 4 pre-simulation | `stages/simulator.md` |
-| Step 5 integration + optional adversarial | `stages/redteam.md` |
-| Step 6-7 closure + post-simulation | `stages/closure.md` |
+| Step 3 pre-simulation (gap scan + completeness enumeration) | `stages/simulator.md` |
+| Step 4 closure draft + post-simulation + write file | `stages/closure.md` |
 | 9 architecture patterns + selection mnemonic | `references/01-patterns.md` |
 | 20+ agent design patterns | `references/02-agent-patterns.md` |
 | ★Merged problem→solution map | `references/03-problem-solution-map.md` |
@@ -165,42 +163,41 @@ A: The vault lives inside the skill dir — commit or stash `experience/` change
 | 复用评估 | 只写"核心逻辑匹配需求" | ★**问题拟合四问**：它解决什么问题/我们真有吗/解法对症吗/怎么复用 + **裁剪清单**（保留/砍/改） |
 | 设计顺序 | 先调研后整合，找码没依据 | **先设计后找码**：先产出「我们的问题清单」，再带问题找复用 |
 | 知识加载 | 凭感觉选 skill | **条件触发**：无智能体的需求不加载 agent 知识 |
-| 找遗漏 | 靠经验扫一遍 | 前模拟（踩坑库辅助）+ 后模拟（覆盖验证）+ 可选对抗（攻方向） |
-| 确认 | 一口气跑完才回头 | **每个 Step 都有强制收尾确认点**，答完才进下一步 |
+| 找遗漏 | 靠经验扫一遍 | 前模拟（踩坑库 + 完整性穷举）+ 后模拟（覆盖验证） |
+| 确认 | 一口气跑完才回头 | **全程只停 4 次**，其余连续跑完不打扰 |
 
 ### 核心能力
 
-- **三合一一键闭环**：需求澄清 → 领域设计 → GitHub 复用评估 → 前模拟 → 可选对抗 → 闭环草案 → 后模拟 → 写 CLOSURE.md
+- **三合一一键闭环**：需求澄清 → 领域设计 → GitHub 复用评估 → 前模拟 → 可行性整合 → 闭环报告（草案+后模拟走查）→ 写 CLOSURE.md
 - **★先设计后找码**：Step 2 用 arch/agent 知识先设计出「我们的问题清单」，Step 3 才带着问题去 GitHub——问题拟合才有依据
 - **★问题拟合四问 + 裁剪清单**：从代码实读（不只看 README）判断候选 repo 解决什么问题、我们需求里真有没有、解法是否对症踩坑库、怎么复用；每处裁剪都要说"因为它解决的是我们没有的问题"
 - **条件触发 agent 知识**：需求含智能体（agent/AI 助手/工具调用/多智能体/RAG）才加载 agent-flow，否则不加载，避免无关内容
 - **9 大架构模式 + 20+ 智能体设计模式**：每个含"解决什么问题/长什么样/代价/什么时候别用"
 - **合并踩坑库 55 条**：架构 17 条 + 智能体 38 条 + 真实事故档案，每条 = 坑 → 后果 → 对策
 - **5 组审查清单 + 交付门禁**：一致性/韧性/规模/安全/AI 特有，无 CRITICAL 才能交付
-- **31 个真实系统模板地图 + 双模拟 + 可选对抗**：模板当设计起点；前模拟找遗漏、后模拟验覆盖、对抗攻方向
+- **31 个真实系统模板地图 + 双模拟**：模板当设计起点；前模拟找遗漏（踩坑库 + Actor 穷举 + Premortem 完整性检查）、后模拟验覆盖
 - **分领域经验库**：arch / agent / general 三库独立沉淀，越用越懂你
 
 ### 工作原理
 
-单命令走完，**每个 Step 都有强制收尾确认点**（答完才进下一步）：
+单命令走完，**全程只停 4 次**，其余连续跑完不打扰：
 
 ```
 /design-lab <需求>
-  ├─ Step 1  需求澄清(自适应) + 路径选择 ── 用户确认
+  ├─ Step 1  需求澄清(自适应) + 路径选择 ── 用户答 ①
   │          需求清楚少问甚至不问；模糊才问 1-2 个关键问题
   ├─ Step 2  领域设计(先设计后找码) ★产出「我们的问题清单」
   │          ├─ 架构/系统类 → arch-flow（场景估算/模式选型/结构/韧性）
   │          └─ 含智能体    → 追加 agent-flow（BDD/模式/结构/护栏测试）
-  │          ── ⚠️ 强制收尾：「设计草案+问题清单 OK 吗？」
-  ├─ Step 3  researcher GitHub 找复用 + 问题拟合四问 + 裁剪清单
-  │          ── ⚠️ 强制收尾：「复用评估+裁剪 OK 吗？」
-  ├─ Step 4  前模拟找遗漏(预读共享踩坑库)
-  ├─ Step 5  可行性整合 + 可选对抗(用户选) ── ⚠️ 强制收尾：方向对吗？跑不跑对抗？
-  ├─ Step 6  闭环草案 ── ⚠️ 强制收尾：「方案 OK 吗？」
-  └─ Step 7  后模拟验证 → 确认后写 CLOSURE.md
+  │          ── ⚠️ 收尾 ②：「设计草案+问题清单 OK 吗？」
+  ├─ Step 3  researcher → 前模拟 → 整合 连续执行（中间不停）
+  │          ├─ researcher: GitHub 找复用 + 问题拟合四问 + 裁剪清单
+  │          ├─ 前模拟: 遗漏扫描 + 完整性穷举(预读共享踩坑库)
+  │          └─ 整合: 复用Top3 + 遗漏Top5 + 裁决 ── ⚠️ 收尾 ③
+  └─ Step 4  草案→后模拟走查→一起呈现 ── 收尾 ④ ──→ 写 CLOSURE.md
 ```
 
-**关键设计**：先设计（知道自己有哪些问题）→ 再找码（判断候选解决的是不是自己的问题）→ 前模拟（找遗漏）→ 对抗（攻方向，可选）→ 后模拟（验覆盖）。需求变更随时暂停、回退对应 Step。
+**关键设计**：先设计（知道自己有哪些问题）→ 再找码（判断候选解决的是不是自己的问题）→ 前模拟（找遗漏 + 完整性穷举）→ 后模拟（验覆盖）。需求变更随时暂停、回退对应 Step。
 
 ### 安装
 
@@ -230,13 +227,12 @@ cp -r design-lab-skills/skills/design-lab ~/.claude/skills/
 
 | 需要什么 | 查哪里 |
 |---------|--------|
-| 调度入口 + Step 1-7 编排 + 硬规则 | `SKILL.md` |
+| 调度入口 + Step 1-4 编排 + 硬规则 | `SKILL.md` |
 | Step 2 架构设计（估算/选型/结构/韧性） | `flows/arch-flow.md` |
 | Step 2 智能体设计（条件触发） | `flows/agent-flow.md` |
 | Step 3 调研 + ★问题拟合四问 + 裁剪清单 | `stages/researcher.md` |
-| Step 4 前模拟（遗漏扫描） | `stages/simulator.md` |
-| Step 5 整合 + 可选对抗 | `stages/redteam.md` |
-| Step 6-7 闭环草案 + 后模拟 + 写文件 | `stages/closure.md` |
+| Step 3 前模拟（遗漏扫描 + 完整性穷举） | `stages/simulator.md` |
+| Step 4 闭环草案 + 后模拟 + 写文件 | `stages/closure.md` |
 | 9 大架构模式 + 选型口诀 | `references/01-patterns.md` |
 | 20+ 智能体设计模式 | `references/02-agent-patterns.md` |
 | ★合并问题→方案映射（架构5组+智能体14类） | `references/03-problem-solution-map.md` |
