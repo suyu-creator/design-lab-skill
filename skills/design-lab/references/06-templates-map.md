@@ -60,15 +60,44 @@
 | 车载电子电气（E/E） | 特斯拉、openpilot | **ASIL 安全隔离**、CAN+车载以太网两张网、整车 OTA、影子模式 |
 | 机器人系统 | 扫地机、AGV、无人机 | 感知→规划→控制**频率分层**、独立安全旁路、录制回放、车队管理 |
 
-## 深挖索引（需要深入某个主题时回原文）
+## 深挖索引（主题 → 本 skill 内对应参考）
 
-| 主题 | 原文章节 |
+> 库内参考优先；需要施工级深度时按下方「活源深挖」fetch 原文。
+
+| 主题 | 查哪里 |
 |---|---|
-| 一致性工程（Saga/Outbox/幂等/事件溯源/CQRS） | awesome-architecture tutorial/11 |
-| 规模化力学（一致性哈希/热点/多活/尾延迟/扇出放大） | tutorial/13 |
-| 演进拆分（绞杀者/并行运行/零停机迁移/DDD 限界上下文） | tutorial/14 |
-| 组织即架构（康威/逆康威/团队拓扑/平台工程） | tutorial/15 |
-| 安全多租户（威胁建模/零信任/爆炸半径/租户隔离） | tutorial/16 |
-| 大模型时代判断（vibe coding/非确定性/上下文工程） | tutorial/17 |
-| 完整案例推演（从 0 推到上线再推到真实压力） | cases/（抢票/工单 SaaS/RAG/实时协同/Feed/编码 Agent 平台） |
-| 技术选型（语言/数据库/缓存MQ/API/云原生/可观测/AI 基建） | tutorial/27-34 |
+| 一致性工程（Saga/Outbox/幂等/超卖） | `03` Part 1 组A + `04` #04-#07 |
+| 缓存与消息（穿透/击穿/雪崩/积压/Outbox） | `03` Part 1 组B2 + `04` #18-#23 |
+| 规模化力学（热点/扇出/分页/信封估算） | `03` Part 1 组C + `08` 信封估算 |
+| 演进拆分（演进路线/ADR/何时拆服务） | `08` 演进 + `04` #01-#03 |
+| 安全多租户（越权/隔离/注入/提示注入） | `03` Part 1 组D |
+| 大模型时代判断（非确定性/成本/eval） | `03` Part 1 组E + `04` Part 2 |
+| 技术选型（DB/缓存/MQ/API/可观测） | `08` 选型判断 + 本表模板 |
+
+## 活源深挖（awesome-architecture 原仓库，按需 fetch 原文）
+
+> 源仓库：https://github.com/study8677/awesome-architecture ——本 skill 模板地图的出处，内容持续更新，**不克隆进库、按需取用**。
+>
+> ⚠️ **fetch 坑位（实测）**：中文文件名必须 URL 编码；`raw.githubusercontent.com` 直连中文路径会 404，要走 GitHub API：
+
+```bash
+python -c "
+import urllib.request, urllib.parse, json, base64
+path = 'tutorial/29-缓存消息队列与事件系统选型.md'
+url = 'https://api.github.com/repos/study8677/awesome-architecture/contents/' + urllib.parse.quote(path)
+with urllib.request.urlopen(urllib.request.Request(url)) as r:
+    d = json.load(r)
+print(base64.b64decode(d['content']).decode('utf-8'))
+"
+```
+
+| 深水区 | 按需读 |
+|---|---|
+| 缓存 / 消息队列 / 事件系统 | `tutorial/29-缓存消息队列与事件系统选型.md` |
+| 数据库与存储选型 | `tutorial/28-数据库与存储选型.md` |
+| 一致性工程（Saga/Outbox/幂等） | `tutorial/11-数据一致性工程.md` + `cases/stararena-ticketing/` |
+| 韧性（熔断/舱壁/降载/SLO） | `tutorial/12-为失败而设计.md` |
+| 规模化（一致性哈希/热点/尾延迟） | `tutorial/13-规模化的力学.md` + `cases/feedstream-content/` |
+| 技术选型决策树 | `tutorial/34-技术选型决策树.md` |
+| 完整量化推演（从 0 到上线到压力） | `cases/`（抢票/工单SaaS/RAG/协同/Feed/编码Agent 六案例） |
+| 智能体/多智能体（编排/子代理/沙箱/eval） | `cases/codepilot-agent/`（ADR-05 子代理协议）+ microsoft/agent-framework（生产级编排四模式）+ openai/swarm（handoff 轻量教学） |

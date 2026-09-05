@@ -137,7 +137,7 @@ proceed / 改 / 转向 / kill
 │   ├── 01-patterns.md     # 9 大架构模式 + 选型口诀
 │   ├── 02-agent-patterns.md # 智能体设计模式（20+）
 │   ├── 03-problem-solution-map.md # ★合并问题→方案映射（架构5组+智能体14类）
-│   ├── 04-pitfalls.md     # 合并踩坑库（架构#01-17 + 智能体#A01-A38 + 事故）
+│   ├── 04-pitfalls.md     # 合并踩坑库（架构#01-23 + 智能体#A01-A42 + 事故）
 │   ├── 05-checklists.md   # 合并检查清单 + 评审标准 + 交付门禁
 │   ├── 06-templates-map.md # 31 真实系统模板地图
 │   ├── 07-agent-templates.md # agent 模板（prompt/schema/测试）

@@ -8,19 +8,29 @@
 1. 每条声明必须引用 GitHub 代码(repo@文件:行号) 或 标注「LLM 推测」。
 2. **每个复用候选必须过「问题拟合四问」+ 出裁剪清单**（见下）。
 3. 先 Read `references/03-problem-solution-map.md`（问题→方案表）和 `references/04-pitfalls.md`（踩坑库）再评估。
+4. **问题清单命中深水区（缓存/消息队列/数据库/一致性/高并发）→ 必须施工级深挖**（见下节），不许只凭 LLM 既有知识给结论。
 
-**GitHub 搜索**：**强烈优先用 MCP 工具**（`search_github` / `list_github_files` / `read_github_file`）——结果质量高、免手动解析。MCP 不可用时才用命令行兜底：
-- 搜仓库：`gh search repos "<关键词>" --sort stars --limit 10`
-- 列目录：`gh api "repos/<owner>/<repo>/contents/<path>"`
-- 读文件：`curl -s "https://raw.githubusercontent.com/<owner>/<repo>/<branch>/<path>"`
+**GitHub 搜索**：优先用 MCP 工具（`search_github` / `list_github_files` / `read_github_file`，用法见 MCP 说明）。MCP 不可用时命令行兜底：`gh search repos "<关键词>" --sort stars --limit 10` / `gh api "repos/<owner>/<repo>/contents/<path>"` / `curl -s "https://raw.githubusercontent.com/<owner>/<repo>/<branch>/<path>"`。
+
+## ★ 施工级深挖（硬约束 4 的展开）
+
+问题清单命中深水区（缓存 / 消息队列 / 数据库 / 一致性 / 高并发）时，二选一（或都做）：
+
+1. **fetch 活源**：查 `references/06-templates-map.md` 活源表，读对应 tutorial/case 原文（fetch 命令与 ⚠️ 中文路径坑位见该表）
+2. **读标杆 repo 核心实现**：找该领域 1-2 个高星项目，读核心文件（不是 README）
+
+**产出硬标准——结论落「模式 + 参数 + 坑」级**：
+- ✅ "cache-aside + TTL 基准 30min±10min 随机抖动 + 空值缓存短 TTL 挡穿透，热 key 互斥重建（参考 cases/stararena 推演）"
+- ❌ "加 Redis 缓存"（名词级 = 未完成，打回补数）
+
+每条结论附来源：活源章节路径 或 repo@file:line。
 
 ## 查询步骤
 
 0. ⚠️ **先按子系统/分层拆需求，再逐层搜**：把需求按 Step 2 结构设计拆成子系统或分层（如 AI 客服 = AI 对话层 + 客服业务后端[会话/工单/坐席] + 用户权限 + 报表统计），**每个子系统各搜一轮**，关键词对每个子系统分别派生。**搜完自查：有没有子系统一轮都没搜过？** 不许只盯一个方向。
-1. `search_github("XX")` — 搜同类项目（限流时用 `web_search_github` 或 gh/curl），**关键词优先从 Step 2 选定的模式/问题派生**（如"订单系统 乐观锁""agent RAG 引用溯源"）
-2. `list_github_files(url)` — 浏览目录结构
-3. `read_github_file(url, path)` — **读实际内容**（挑核心文件读，不只看 README——判断问题拟合必须看代码）
-4. WebSearch 补充信息（竞品口碑、行业报告、最新动态）
+1. 搜同类项目，**关键词优先从 Step 2 选定的模式/问题派生**（如"订单系统 乐观锁""agent RAG 引用溯源"）
+2. **读实际内容**（挑核心文件读，不只看 README——判断问题拟合必须看代码）
+3. WebSearch 补充信息（竞品口碑、行业报告、最新动态）
 
 聚焦 top 候选 repo 即可，够用就停。
 
