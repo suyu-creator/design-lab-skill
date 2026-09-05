@@ -44,11 +44,13 @@ Three separate skills each cover one slice, but they don't connect:
 - **★Design first, find code later**: Step 2 uses arch/agent knowledge to design "our problem list"; Step 3 searches GitHub with that list in hand — this is what makes problem-fit judgment possible
 - **★4 problem-fit questions + trim list**: read actual code (not just the README) to judge what problem the candidate solves, whether we really have it, whether the fix matches the pitfalls library, and how to reuse; every cut must state "it solves a problem we don't have"
 - **Conditional agent knowledge**: agent-flow loads only when the requirement involves agents (agent/AI assistant/tool use/multi-agent/RAG), otherwise skipped
-- **9 architecture patterns + 20+ agent design patterns**: each covers "what problem / what it looks like / cost / when NOT to use"
-- **Merged pitfalls library — 57 entries**: 17 architecture + 40 agent + real incident files, each = pit → consequence → countermeasure
+- **9 architecture patterns + 30+ agent design patterns**: each covers "what problem / what it looks like / cost / when NOT to use"
+- **Merged pitfalls library — 65 entries**: 23 architecture (#01-#23) + 42 agent (#A01-#A42) + real incident files, each = pit → consequence → countermeasure
 - **5-group review checklist + delivery gates**: consistency / resilience / scale / security / AI-specific; no CRITICAL → no delivery
 - **31 real-system template map + dual simulation**: templates as design starting points; pre-simulation finds gaps (pitfalls library + Actor enumeration + Premortem completeness check), post-simulation verifies coverage
-- **Per-domain experience vault**: separate `arch` / `agent` / `general` libraries — it gets to know you better over time
+- **★Backend deep-water hooks**: cache/MQ problem→solution groups (penetration/breakdown/avalanche/consistency/backlog) + **living-source deep-dive** (fetch real tutorials/cases on demand) + **build-level findings** (conclusions must land on "pattern + params + pitfalls", noun-level gets sent back) + **quantified hard standards** (every perf/concurrency claim carries numbers)
+- **★Multi-agent orchestration protocol**: topology three-way fork (star / hierarchical handoff / event-driven mesh) + 5-field task card (goal/boundary/tools+permissions/acceptance/budget) + 3-part result report (conclusion + key evidence + trace reference, no full-text) + arbitration rules (non-overlapping write ranges, coordinator decides conflicts)
+- **Per-domain experience vault**: separate `arch` / `agent` / `general` libraries — it gets to know you better over time (local-private, never pushed)
 
 ### How It Works
 
@@ -106,9 +108,9 @@ Or manually drop the `skills/design-lab/` folder into `~/.claude/skills/` and re
 | Step 3 pre-simulation (gap scan + completeness enumeration) | `stages/simulator.md` |
 | Step 4 closure draft + post-simulation + write file | `stages/closure.md` |
 | 9 architecture patterns + selection mnemonic | `references/01-patterns.md` |
-| 20+ agent design patterns | `references/02-agent-patterns.md` |
+| 30+ agent design patterns | `references/02-agent-patterns.md` |
 | ★Merged problem→solution map | `references/03-problem-solution-map.md` |
-| Merged pitfalls library (57 + incidents) | `references/04-pitfalls.md` |
+| Merged pitfalls library (65 + incidents) | `references/04-pitfalls.md` |
 | Merged checklists + review + delivery gates | `references/05-checklists.md` |
 | 31 real-system template map | `references/06-templates-map.md` |
 | Agent templates (prompt/schema/test) | `references/07-agent-templates.md` |
@@ -119,7 +121,7 @@ Or manually drop the `skills/design-lab/` folder into `~/.claude/skills/` and re
 
 - **[Merged]** From three published skills: **deep-analysis** (research-loop trunk) + **arch-designer** (architecture knowledge: 9 patterns / 11 pitfalls / incidents / 31 templates) + **agent-designer** (agent knowledge: 20+ patterns / 38 pitfalls / delivery) — the original repos remain independent
 - **[Literature]** awesome-architecture, Anthropic《Agentic Design Patterns》, official post-mortems
-- **[Practice]** per-domain experience vaults (`experience/arch.md` / `agent.md` / `general.md`, U01+)
+- **[Practice]** per-domain experience vaults (local-private, U01+)
 
 ### FAQ
 
@@ -136,10 +138,10 @@ A: No. It outputs plans / designs / research reports / a closure document (CLOSU
 A: Only after knowing your own problems (Step 2 problem list) can you judge whether a candidate repo solves your problem — a hot repo ≠ the right repo. Hit the problem → keep; miss it → cut.
 
 **Q: How do I add hands-on experience?**
-A: Say "加入经验库" (add to experience vault) after a project; it walks through 5 questions (scenario/pit/consequence/countermeasure/source) and writes to the matching domain vault. Auto-read at the start of every design.
+A: Say "加入经验库" (add to experience vault) after a project; it walks through 5 questions (scenario/pit/consequence/countermeasure/source) and writes to the matching domain vault. Auto-read at the start of every design (missing file → skipped gracefully).
 
 **Q: Will git pull overwrite my experience?**
-A: No. The repo ships `experience/` as blank templates only — the author's private entries are never uploaded, and `experience/` is git-ignored so your own entries can't be accidentally pushed either. `git pull` updates the skill without touching your local vault.
+A: No. The repo carries **zero `experience/` files** — the vault is a local-private mechanism, git-ignored so your entries can never be pushed. `git pull` updates the skill without touching your local vault; create `experience/arch.md` / `agent.md` / `general.md` locally to start (the format template is in each file's header comment).
 
 ---
 
@@ -172,15 +174,17 @@ A: No. The repo ships `experience/` as blank templates only — the author's pri
 - **★先设计后找码**：Step 2 用 arch/agent 知识先设计出「我们的问题清单」，Step 3 才带着问题去 GitHub——问题拟合才有依据
 - **★问题拟合四问 + 裁剪清单**：从代码实读（不只看 README）判断候选 repo 解决什么问题、我们需求里真有没有、解法是否对症踩坑库、怎么复用；每处裁剪都要说"因为它解决的是我们没有的问题"
 - **条件触发 agent 知识**：需求含智能体（agent/AI 助手/工具调用/多智能体/RAG）才加载 agent-flow，否则不加载，避免无关内容
-- **9 大架构模式 + 20+ 智能体设计模式**：每个含"解决什么问题/长什么样/代价/什么时候别用"
-- **合并踩坑库 57 条**：架构 17 条 + 智能体 40 条 + 真实事故档案，每条 = 坑 → 后果 → 对策
+- **9 大架构模式 + 30+ 智能体设计模式**：每个含"解决什么问题/长什么样/代价/什么时候别用"
+- **合并踩坑库 65 条**：架构 #01-#23（23 条）+ 智能体 #A01-#A42（42 条）+ 真实事故档案，每条 = 坑 → 后果 → 对策
 - **5 组审查清单 + 交付门禁**：一致性/韧性/规模/安全/AI 特有，无 CRITICAL 才能交付
 - **31 个真实系统模板地图 + 双模拟**：模板当设计起点；前模拟找遗漏（踩坑库 + Actor 穷举 + Premortem 完整性检查）、后模拟验覆盖
-- **分领域经验库**：arch / agent / general 三库独立沉淀，越用越懂你
+- **★后端深水区钩子**：缓存/MQ 问题→方案组（穿透/击穿/雪崩/一致性/积压）+ **活源深挖**（按需 fetch 真实教程/案例）+ **施工级结论**（必须落"模式+参数+坑"级，名词级打回）+ **量化硬标准**（性能/并发声明必带数字）
+- **★多智能体编排协议**：拓扑三岔路（星型/层级 handoff/事件驱动 mesh）+ **任务卡 5 字段**（目标/边界/工具权限/验收/预算）+ **回传三件套**（结论+关键证据+trace 引用，禁全文）+ **仲裁两规则**（写入范围不重叠、协调者裁决）
+- **分领域经验库**：arch / agent / general 三库独立沉淀，越用越懂你（本地私有，永不进 git）
 
 ### 工作原理
 
-单命令走完，**全程只停 4 次**，其余连续跑完不打扰：
+单命令走完，**固定停 4 个决策点**，其余连续跑完不打扰：
 
 ```
 /design-lab <需求>
@@ -234,9 +238,9 @@ cp -r design-lab-skills/skills/design-lab ~/.claude/skills/
 | Step 3 前模拟（遗漏扫描 + 完整性穷举） | `stages/simulator.md` |
 | Step 4 闭环草案 + 后模拟 + 写文件 | `stages/closure.md` |
 | 9 大架构模式 + 选型口诀 | `references/01-patterns.md` |
-| 20+ 智能体设计模式 | `references/02-agent-patterns.md` |
+| 30+ 智能体设计模式 | `references/02-agent-patterns.md` |
 | ★合并问题→方案映射（架构5组+智能体14类） | `references/03-problem-solution-map.md` |
-| 合并踩坑库（57 条 + 事故） | `references/04-pitfalls.md` |
+| 合并踩坑库（65 条 + 事故） | `references/04-pitfalls.md` |
 | 合并检查清单 + 评审标准 + 交付门禁 | `references/05-checklists.md` |
 | 31 真实系统模板地图 | `references/06-templates-map.md` |
 | agent 模板（prompt/schema/测试） | `references/07-agent-templates.md` |
@@ -247,7 +251,7 @@ cp -r design-lab-skills/skills/design-lab ~/.claude/skills/
 
 - **[合并]** 由三个已发布 skill 合并而成：**deep-analysis**（调研闭环主干）+ **arch-designer**（架构知识：9 模式/11 坑/事故/31 模板）+ **agent-designer**（智能体知识：20+ 模式/38 坑/交付），原仓库各自保留独立
 - **[文献]** awesome-architecture、Anthropic《Agentic Design Patterns》、各官方事后分析等提炼
-- **[实战]** 分领域经验库（`experience/arch.md` / `agent.md` / `general.md`，编号 U01 起）
+- **[实战]** 分领域经验库（本地私有，编号 U01 起）
 
 ### FAQ
 
@@ -264,10 +268,10 @@ A: 不写。它输出的是**方案/设计/调研报告/闭环文档**（CLOSURE
 A: 只有先知道自己系统有哪些问题（Step 2 问题清单），才能在 Step 3 判断候选 repo 解决的是不是自己的问题——热门 repo ≠ 适合我们，命中问题才保留，没命中就砍。
 
 **Q: 怎么把实战经验加进去？**
-A: 做完项目说一句「加入经验库」，按 5 问引导（场景/坑/后果/对策/来源）写进对应领域经验库。下次设计开始自动读取参考。
+A: 做完项目说一句「加入经验库」，按 5 问引导（场景/坑/后果/对策/来源）写进对应领域经验库。下次设计开始自动读取参考（文件缺失则跳过，不影响运行）。
 
 **Q: git 更新 skill 会不会覆盖我的经验？**
-A: 不会。仓库里的 `experience/` 只是空白模板（作者私有经验不上传），且已被 `.gitignore` 排除——你填的经验不会进 git、不会被误推送，`git pull` 更新 skill 也不会动你本地经验库。
+A: 不会。仓库**不包含任何 `experience/` 文件**——经验库是本地私有机制，已被 `.gitignore` 排除，你的经验永远不会进 git、不会被误推送；`git pull` 更新 skill 完全不动本地经验库。首次使用按格式在本地自建 `experience/arch.md` / `agent.md` / `general.md`（文件头注释即模板）。
 
 ---
 
