@@ -63,8 +63,9 @@
 
 ## 7. 事故复盘（SRE post-mortem）
 
-每次事故按格式复盘：时间线 → 根因分析 → 暴露的系统性问题 → 修复 → 教训沉淀回踩坑库。
-> 参考 ai-agent-incidents：委派闭环、单点守卫、配置变更健康验证、don't fake it。
+每次事故按 SRE 手册骨架复盘：Summary → Impact → **Root Causes 与 Trigger 分开** → Detection → Timeline → Action Items（落到代码）→ Lessons（做对/做错/运气）→ 教训回踩坑库（04）。
+⚠️ 关键判断：**根因 ≠ 触发点**——Trigger 是导火索，Root Cause 是让导火索能点着火的系统性缺陷；five whys 挖到可行动项为止；blameless：不追责人，只修系统。
+> 来源：SRE Book postmortem 模板（sayyidrizvi-work/SRE-Postmortem-Templates）+ ai-agent-incidents（委派闭环、单点守卫、配置变更健康验证、don't fake it）。
 
 ## 8. 发布检查清单
 

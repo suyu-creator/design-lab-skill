@@ -74,13 +74,7 @@ def test_real_llm_tool_protocol():
     assert resp.tool_calls[0].name in VALID_TOOLS
 ```
 
-**幻觉防线测试**（故意注入假声明验证拦截）：
-```python
-def test_hallucination_caught():
-    answer = pipeline.query("谁的发明？")           # 回答含注入的假声明
-    assert answer.confidence < 0.7                  # 置信度低 → 触发精炼
-    assert "1969" not in answer.claim_report[0]["text"]  # 假声明被移除
-```
+> 幻觉防线测试（故意注入假声明验证拦截率）见 `09-delivery.md` 测试节。
 
 ## 4. 记忆引导规则模板（memoria 风格）
 
