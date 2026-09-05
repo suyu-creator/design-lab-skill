@@ -6,8 +6,8 @@
 ## 使用说明
 - 每次设计开始时，design-lab（智能体流程）会自动读取本文件并作为参考。
 - 编号从 U01 递增，不重复。
-- 想分享经验库：把 `experience/` 目录连同 skill 一起 commit + push 即可。
-- ⚠️ git pull 更新 skill 前，先 commit 或 stash 本文件改动，避免被覆盖。
+- 想分享经验库：默认 `experience/` 已被 .gitignore 排除（你的私有经验不会误传）；要分享时自行去掉排除再 push。
+- ⚠️ git pull 更新 skill 不会动本文件（已被 .gitignore 排除），可放心更新。
 
 ## 我的经验
 

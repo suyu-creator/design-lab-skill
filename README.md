@@ -45,7 +45,7 @@ Three separate skills each cover one slice, but they don't connect:
 - **★4 problem-fit questions + trim list**: read actual code (not just the README) to judge what problem the candidate solves, whether we really have it, whether the fix matches the pitfalls library, and how to reuse; every cut must state "it solves a problem we don't have"
 - **Conditional agent knowledge**: agent-flow loads only when the requirement involves agents (agent/AI assistant/tool use/multi-agent/RAG), otherwise skipped
 - **9 architecture patterns + 20+ agent design patterns**: each covers "what problem / what it looks like / cost / when NOT to use"
-- **Merged pitfalls library — 55 entries**: 17 architecture + 38 agent + real incident files, each = pit → consequence → countermeasure
+- **Merged pitfalls library — 57 entries**: 17 architecture + 40 agent + real incident files, each = pit → consequence → countermeasure
 - **5-group review checklist + delivery gates**: consistency / resilience / scale / security / AI-specific; no CRITICAL → no delivery
 - **31 real-system template map + dual simulation**: templates as design starting points; pre-simulation finds gaps (pitfalls library + Actor enumeration + Premortem completeness check), post-simulation verifies coverage
 - **Per-domain experience vault**: separate `arch` / `agent` / `general` libraries — it gets to know you better over time
@@ -59,7 +59,7 @@ One command, with only **4 confirmation gates** — everything else runs without
   ├─ Step 1  Clarification (adaptive) + path choice ── user answers ①
   │          Few/no questions if clear; 1-2 key ones if vague
   ├─ Step 2  Domain design (design first) ★produces "our problem list"
-  │          ├─ Architecture/system → arch-flow (estimation/patterns/structure/resilience)
+  │          ├─ arch-flow loaded by default (skipped only for tiny projects) → estimation/patterns/structure/resilience
   │          └─ With agents       → also agent-flow (BDD/patterns/structure/guardrails)
   │          ── ⚠️ gate ②: "Draft + problem list OK?"
   ├─ Step 3  researcher → pre-simulation → integration (continuous, no stops)
@@ -75,7 +75,7 @@ One command, with only **4 confirmation gates** — everything else runs without
 
 ```bash
 # Clone
-git clone https://github.com/suyu-creator/design-lab-skills.git
+git clone https://github.com/suyu-creator/design-lab-skill.git
 
 # Copy to Claude Code skills dir
 cp -r design-lab-skills/skills/design-lab ~/.claude/skills/
@@ -100,7 +100,7 @@ Or manually drop the `skills/design-lab/` folder into `~/.claude/skills/` and re
 | Need | Look here |
 |------|-----------|
 | Entry point + Step 1-4 orchestration + hard rules | `SKILL.md` |
-| Step 2 architecture design | `flows/arch-flow.md` |
+| Step 2 architecture design (estimation/patterns/structure/extension points/resilience) | `flows/arch-flow.md` |
 | Step 2 agent design (conditional) | `flows/agent-flow.md` |
 | Step 3 research + ★problem-fit + trim list | `stages/researcher.md` |
 | Step 3 pre-simulation (gap scan + completeness enumeration) | `stages/simulator.md` |
@@ -108,7 +108,7 @@ Or manually drop the `skills/design-lab/` folder into `~/.claude/skills/` and re
 | 9 architecture patterns + selection mnemonic | `references/01-patterns.md` |
 | 20+ agent design patterns | `references/02-agent-patterns.md` |
 | ★Merged problem→solution map | `references/03-problem-solution-map.md` |
-| Merged pitfalls library (55 + incidents) | `references/04-pitfalls.md` |
+| Merged pitfalls library (57 + incidents) | `references/04-pitfalls.md` |
 | Merged checklists + review + delivery gates | `references/05-checklists.md` |
 | 31 real-system template map | `references/06-templates-map.md` |
 | Agent templates (prompt/schema/test) | `references/07-agent-templates.md` |
@@ -139,7 +139,7 @@ A: Only after knowing your own problems (Step 2 problem list) can you judge whet
 A: Say "加入经验库" (add to experience vault) after a project; it walks through 5 questions (scenario/pit/consequence/countermeasure/source) and writes to the matching domain vault. Auto-read at the start of every design.
 
 **Q: Will git pull overwrite my experience?**
-A: The vault lives inside the skill dir — commit or stash `experience/` changes before `git pull`. On conflict, keep both sides and de-duplicate numbers.
+A: No. The repo ships `experience/` as blank templates only — the author's private entries are never uploaded, and `experience/` is git-ignored so your own entries can't be accidentally pushed either. `git pull` updates the skill without touching your local vault.
 
 ---
 
@@ -173,7 +173,7 @@ A: The vault lives inside the skill dir — commit or stash `experience/` change
 - **★问题拟合四问 + 裁剪清单**：从代码实读（不只看 README）判断候选 repo 解决什么问题、我们需求里真有没有、解法是否对症踩坑库、怎么复用；每处裁剪都要说"因为它解决的是我们没有的问题"
 - **条件触发 agent 知识**：需求含智能体（agent/AI 助手/工具调用/多智能体/RAG）才加载 agent-flow，否则不加载，避免无关内容
 - **9 大架构模式 + 20+ 智能体设计模式**：每个含"解决什么问题/长什么样/代价/什么时候别用"
-- **合并踩坑库 55 条**：架构 17 条 + 智能体 38 条 + 真实事故档案，每条 = 坑 → 后果 → 对策
+- **合并踩坑库 57 条**：架构 17 条 + 智能体 40 条 + 真实事故档案，每条 = 坑 → 后果 → 对策
 - **5 组审查清单 + 交付门禁**：一致性/韧性/规模/安全/AI 特有，无 CRITICAL 才能交付
 - **31 个真实系统模板地图 + 双模拟**：模板当设计起点；前模拟找遗漏（踩坑库 + Actor 穷举 + Premortem 完整性检查）、后模拟验覆盖
 - **分领域经验库**：arch / agent / general 三库独立沉淀，越用越懂你
@@ -187,7 +187,7 @@ A: The vault lives inside the skill dir — commit or stash `experience/` change
   ├─ Step 1  需求澄清(自适应) + 路径选择 ── 用户答 ①
   │          需求清楚少问甚至不问；模糊才问 1-2 个关键问题
   ├─ Step 2  领域设计(先设计后找码) ★产出「我们的问题清单」
-  │          ├─ 架构/系统类 → arch-flow（场景估算/模式选型/结构/韧性）
+  │          ├─ 默认加载 arch-flow（仅极小项目跳过）→ 场景估算/模式选型/结构/韧性
   │          └─ 含智能体    → 追加 agent-flow（BDD/模式/结构/护栏测试）
   │          ── ⚠️ 收尾 ②：「设计草案+问题清单 OK 吗？」
   ├─ Step 3  researcher → 前模拟 → 整合 连续执行（中间不停）
@@ -203,7 +203,7 @@ A: The vault lives inside the skill dir — commit or stash `experience/` change
 
 ```bash
 # 克隆到本地
-git clone https://github.com/suyu-creator/design-lab-skills.git
+git clone https://github.com/suyu-creator/design-lab-skill.git
 
 # 复制到 Claude Code skills 目录
 cp -r design-lab-skills/skills/design-lab ~/.claude/skills/
@@ -228,7 +228,7 @@ cp -r design-lab-skills/skills/design-lab ~/.claude/skills/
 | 需要什么 | 查哪里 |
 |---------|--------|
 | 调度入口 + Step 1-4 编排 + 硬规则 | `SKILL.md` |
-| Step 2 架构设计（估算/选型/结构/韧性） | `flows/arch-flow.md` |
+| Step 2 架构设计（估算/选型/结构/扩展点/韧性） | `flows/arch-flow.md` |
 | Step 2 智能体设计（条件触发） | `flows/agent-flow.md` |
 | Step 3 调研 + ★问题拟合四问 + 裁剪清单 | `stages/researcher.md` |
 | Step 3 前模拟（遗漏扫描 + 完整性穷举） | `stages/simulator.md` |
@@ -236,7 +236,7 @@ cp -r design-lab-skills/skills/design-lab ~/.claude/skills/
 | 9 大架构模式 + 选型口诀 | `references/01-patterns.md` |
 | 20+ 智能体设计模式 | `references/02-agent-patterns.md` |
 | ★合并问题→方案映射（架构5组+智能体14类） | `references/03-problem-solution-map.md` |
-| 合并踩坑库（55 条 + 事故） | `references/04-pitfalls.md` |
+| 合并踩坑库（57 条 + 事故） | `references/04-pitfalls.md` |
 | 合并检查清单 + 评审标准 + 交付门禁 | `references/05-checklists.md` |
 | 31 真实系统模板地图 | `references/06-templates-map.md` |
 | agent 模板（prompt/schema/测试） | `references/07-agent-templates.md` |
@@ -267,7 +267,7 @@ A: 只有先知道自己系统有哪些问题（Step 2 问题清单），才能�
 A: 做完项目说一句「加入经验库」，按 5 问引导（场景/坑/后果/对策/来源）写进对应领域经验库。下次设计开始自动读取参考。
 
 **Q: git 更新 skill 会不会覆盖我的经验？**
-A: 经验库在 skill 目录内，`git pull` 前先把 `experience/` 的改动 commit 或 stash 就不会丢。冲突时保留双方条目、编号去重即可。
+A: 不会。仓库里的 `experience/` 只是空白模板（作者私有经验不上传），且已被 `.gitignore` 排除——你填的经验不会进 git、不会被误推送，`git pull` 更新 skill 也不会动你本地经验库。
 
 ---
 
