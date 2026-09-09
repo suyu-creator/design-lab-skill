@@ -51,6 +51,23 @@ Three separate skills each cover one slice, but they don't connect:
 - **★Backend deep-water hooks**: cache/MQ problem→solution groups (penetration/breakdown/avalanche/consistency/backlog) + **living-source deep-dive** (fetch real tutorials/cases on demand) + **build-level findings** (conclusions must land on "pattern + params + pitfalls", noun-level gets sent back) + **quantified hard standards** (every perf/concurrency claim carries numbers)
 - **★Multi-agent orchestration protocol**: topology three-way fork (star / hierarchical handoff / event-driven mesh) + 5-field task card (goal/boundary/tools+permissions/acceptance/budget) + 3-part result report (conclusion + key evidence + trace reference, no full-text) + arbitration rules (non-overlapping write ranges, coordinator decides conflicts)
 - **Per-domain experience vault**: separate `arch` / `agent` / `general` libraries — it gets to know you better over time (local-private, never pushed)
+- **★Brownfield (existing-project) mode**: judged at Step 1 (existing code mentioned → brownfield, never silently assumed greenfield) — design starts from a current-state map (skeleton / conventions / pain points), touches only what the problem list hits, and every Phase touching existing code carries regression verification + dry-run rollback; next run reads only the delta from CLOSURE.md
+
+### Design Philosophy: Attention-Driven, Model-Scale
+
+**Two research-backed beliefs shape every line of this skill.**
+
+**1. LLM attention is the scarce resource.** Attention research shows irrelevant context actively degrades reasoning (Shi et al., 2023); models perform worst on information in the middle of long context (Liu et al., 2023, "lost in the middle"); repeated knowledge is worse than absent knowledge (context rot). So the skill treats *what gets injected into context* as a design constraint, not a side effect:
+
+- **No repeated reads** — files already in context are referenced, not re-read; an audit of a max-depth run found ~500 lines of pure duplicated injection and removed it
+- **Delayed loading** — the 31-template map loads only at selection time (Step 2.2), not up-front; agent knowledge loads only for agent requirements
+- **One source of truth** — `references/` owns all knowledge; `flows/` keep only hooks + pointers, no re-teaching
+
+**2. Stronger models → thinner rules, more trust.** We assume the model's *knowledge* keeps improving, so the skill's job is not to teach knowledge but to make the model *do well*:
+
+- **Constitution > memory > textbook** — behavior constraints and stop points matter most; private experience appreciates over time; pure knowledge (textbook) is the first to evaporate
+- **References verify, they don't feed** — knowledge files are checklists to diff your design against, not required reading that anchors it before you think
+- **The flow is a baseline, not a ceiling** — after understanding the flow, the model may add its own steps when the task isn't covered (e.g. a PoC to settle a selection), announcing what and why; add-only, never skip without a written condition
 
 ### How It Works
 
@@ -92,7 +109,7 @@ Or manually drop the `skills/design-lab/` folder into `~/.claude/skills/` and re
 1. ⚠️ **Only complex requirements trigger** — simple ones get a one-line plan
 2. ⚠️ **Reuse first** — "research" path searches GitHub first; "direct plan" path relies on experience (labeled "LLM guess")
 3. ⚠️ **Every reuse candidate passes the 4 problem-fit questions + trim list**; gaps without reuse must get a solution, never just listed
-4. ⚠️ **No agent knowledge loaded for non-agent requirements** (conditional trigger)
+4. ⚠️ **No agent knowledge loaded for non-agent requirements** (conditional trigger); **never re-read files already in context** — reference them (duplicate injection dilutes attention)
 5. ⚠️ **Every claim is sourced** — GitHub code (repo@file:line) or "LLM guess"
 6. ⚠️ **Requirement change = pause** — record → assess impact → roll back to matching Step → continue after user confirms
 7. ⚠️ **Ask, then stop** — always wait for the answer before advancing
@@ -181,6 +198,23 @@ A: No. The repo carries **zero `experience/` files** — the vault is a local-pr
 - **★后端深水区钩子**：缓存/MQ 问题→方案组（穿透/击穿/雪崩/一致性/积压）+ **活源深挖**（按需 fetch 真实教程/案例）+ **施工级结论**（必须落"模式+参数+坑"级，名词级打回）+ **量化硬标准**（性能/并发声明必带数字）
 - **★多智能体编排协议**：拓扑三岔路（星型/层级 handoff/事件驱动 mesh）+ **任务卡 5 字段**（目标/边界/工具权限/验收/预算）+ **回传三件套**（结论+关键证据+trace 引用，禁全文）+ **仲裁两规则**（写入范围不重叠、协调者裁决）
 - **分领域经验库**：arch / agent / general 三库独立沉淀，越用越懂你（本地私有，永不进 git）
+- **★存量模式**：Step 1 判定（需求提及已有代码即存量，绝不静默假设 greenfield）——先盘点现状地图（骨架/惯例/痛点影响面）再设计，只动问题清单命中的，动存量代码的每个 Phase 带回归验证 + dry-run 可回滚；同项目再触发只盘增量不重盘
+
+### 设计哲学：注意力驱动，随模型演进
+
+**两条有研究依据的信念，决定了这个 skill 的每一处设计。**
+
+**1. LLM 的注意力是稀缺资源。** 注意力研究表明：无关上下文会主动干扰推理（Shi et al. 2023）；模型对长上下文中间位置的信息表现最差（lost in the middle，Liu et al. 2023）；重复的知识比没有更糟（context rot）。所以这个 skill 把「往上下文里注入了什么」当成设计约束，而不是副作用：
+
+- **不重复 Read** —— 已在上下文的文件直接引用不重读；审计发现一次全流程运行有约 500 行纯冗余注入，已删
+- **延迟加载** —— 31 模板地图到选型（Step 2.2）才加载，不预读；agent 知识只对含智能体需求加载
+- **单一事实源** —— `references/` 独占全部知识，`flows/` 只留钩子 + 指向，不重复教学
+
+**2. 模型越强，规则越薄，信任越多。** 假设模型的知识会持续变强，skill 的职责不是教知识，而是让模型**做得好**：
+
+- **宪法 > 记忆 > 教科书** —— 行为约束和停点价值最高；私有经验随时间增值；纯知识（教科书）最先蒸发
+- **references 是验证，不是喂养** —— 知识文件是设计完成后对照查漏的清单，不是先注入再锚定你思维的必读
+- **流程是基线，不是天花板** —— 了解流程后，发现任务覆盖不了（如选型拿不准要 PoC）可自主增加解决步骤，宣布加了什么、为什么；只加不跳，跳过仍须明码条件
 
 ### 工作原理
 
@@ -222,7 +256,7 @@ cp -r design-lab-skills/skills/design-lab ~/.claude/skills/
 1. ⚠️ **复杂需求才触发** —— 简单需求直接给 1 句方案
 2. ⚠️ **复用优先** —— 选「先调研」先搜 GitHub，有现成直接引用，不从零想；选「直接给」凭经验（标「LLM 推测」）
 3. ⚠️ **复用候选必须过「问题拟合四问」+ 出裁剪清单**；无复用的坑必须写解决方案
-4. ⚠️ **无智能体的需求不加载 agent 知识**（条件触发）
+4. ⚠️ **无智能体的需求不加载 agent 知识**（条件触发）；**已在上下文的文件不重复 Read**——直接引用（重复注入=稀释注意力）
 5. ⚠️ **每条声明标注来源** —— GitHub 代码(repo@文件:行号) 或 「LLM 推测」
 6. ⚠️ **需求变更即停** —— 暂停 → 记录 → 评估影响 → 回退对应 Step → 用户确认后继续
 7. ⚠️ **问完必停** —— 每次提问后停下等回答，得到答复前绝不推进下一步
