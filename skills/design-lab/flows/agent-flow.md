@@ -4,7 +4,7 @@
 
 ## 前置
 
-先 Read（存在才读，缺失跳过）：
+先 Read（存在才读，缺失跳过；已在上下文的不重复 Read，直接引用——如 03-map 在 arch-flow 前置已读过则只引用其中 Part 2）：
 - `../experience/agent.md` — 智能体经验库，有用户经验则作为设计参考
 - `references/02-agent-patterns.md` — 智能体设计模式
 - `references/03-problem-solution-map.md` — Part 2 智能体问题（幻觉/失控/成本…）

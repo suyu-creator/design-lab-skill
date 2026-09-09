@@ -7,7 +7,7 @@
 **硬约束**：
 1. 每条声明必须引用 GitHub 代码(repo@文件:行号) 或 标注「LLM 推测」。
 2. **每个复用候选必须过「问题拟合四问」+ 出裁剪清单**（见下）。
-3. 先 Read `references/03-problem-solution-map.md`（问题→方案表）和 `references/04-pitfalls.md`（踩坑库）再评估。
+3. 评估前确保 `references/03-problem-solution-map.md`（问题→方案表）和 `references/04-pitfalls.md`（踩坑库）在上下文中——Step 2 已读过则直接引用，**不重复 Read**，仅上下文缺失时补 Read。
 4. **问题清单命中深水区（缓存/消息队列/数据库/一致性/高并发）→ 必须施工级深挖**（见下节），不许只凭 LLM 既有知识给结论。
 
 **GitHub 搜索**：优先用 MCP 工具（`search_github` / `list_github_files` / `read_github_file`，用法见 MCP 说明）。MCP 不可用时命令行兜底：`gh search repos "<关键词>" --sort stars --limit 10` / `gh api "repos/<owner>/<repo>/contents/<path>"` / `curl -s "https://raw.githubusercontent.com/<owner>/<repo>/<branch>/<path>"`。

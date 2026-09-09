@@ -4,12 +4,13 @@
 
 ## 前置
 
-先 Read（存在才读，缺失跳过）：
+先 Read（存在才读，缺失跳过；已在上下文的不重复 Read，直接引用）：
 - `../experience/arch.md` — 架构经验库，有用户经验则作为设计参考
 - `references/01-patterns.md` — 9 大架构模式 + 选型口诀
 - `references/03-problem-solution-map.md` — 问题→方案映射
 - `references/08-design-method.md` — 信封估算 / ADR / 演进
-- `references/06-templates-map.md` — 31 真实系统模板地图
+
+（`references/06-templates-map.md` 不在此预读——Step 2.2 选型时才加载，省前期注意力）
 
 ## 铁律（必须遵守）
 
@@ -31,7 +32,7 @@
 - ⚠️ **量化硬标准**：涉及性能/并发的声明必须带数字（QPS / TTL / 超时预算 / 容量 / 保留时长）；只写名词（"加缓存""上消息队列"）视为未完成，打回补数
 
 ### Step 2.2 模式选型
-查 `references/01-patterns.md` 选型口诀，按**遇到的问题**对症选型（能不用先别用 → 对症 → 付得起代价才上）。
+查 `references/01-patterns.md` 选型口诀，按**遇到的问题**对症选型（能不用先别用 → 对症 → 付得起代价才上）；**Read `references/06-templates-map.md`** 找最接近场景的真实系统模板当起点（铁律 3，此刻才加载）。
 给出 1-2 个候选方案 + 各自的代价权衡，**标推荐项**（用户可在 Step 2 收尾确认时改选）。
 
 ### Step 2.3 结构设计
